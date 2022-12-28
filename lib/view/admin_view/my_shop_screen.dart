@@ -1,12 +1,13 @@
 import 'package:daily_report/generated/assets.dart';
 import 'package:daily_report/getx_controller/user_model.dart';
+import 'package:daily_report/main.dart';
 import 'package:daily_report/model/shop_model.dart';
-import 'package:daily_report/views/create_shop_screen.dart';
+import 'package:daily_report/view/admin_view/create_shop_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../components/constant/contant.dart';
-import '../main.dart';
+import '../../components/constant/contant.dart';
+
 
 class MyShopScreen extends StatefulWidget {
   const MyShopScreen({Key? key}) : super(key: key);

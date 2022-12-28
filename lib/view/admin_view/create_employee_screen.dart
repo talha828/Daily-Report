@@ -1,13 +1,13 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:daily_report/views/signup_screen.dart';
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../components/constant/contant.dart';
-import '../generated/assets.dart';
-import '../getx_controller/user_model.dart';
-import '../main.dart';
-import '../model/shop_model.dart';
+import '../../components/constant/contant.dart';
+import '../../generated/assets.dart';
+import '../../getx_controller/user_model.dart';
+import '../../main.dart';
+import '../../model/shop_model.dart';
+import '../common_view/signup_screen.dart';
 
 class CreateEmployeeScreen extends StatefulWidget {
   const CreateEmployeeScreen({Key? key}) : super(key: key);

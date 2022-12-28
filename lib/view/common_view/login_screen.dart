@@ -1,13 +1,13 @@
 import 'package:altogic/altogic.dart';
 import 'package:daily_report/components/constant/contant.dart';
 import 'package:daily_report/main.dart';
-import 'package:daily_report/views/dashboard_screen.dart';
-import 'package:daily_report/views/signup_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:daily_report/view/admin_view/dashboard_screen.dart';
+import 'package:daily_report/view/common_view/signup_screen.dart';
+ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../getx_controller/user_model.dart';
+import '../../getx_controller/user_model.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

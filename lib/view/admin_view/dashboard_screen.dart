@@ -1,10 +1,13 @@
 import 'package:daily_report/components/constant/contant.dart';
 import 'package:daily_report/generated/assets.dart';
 import 'package:daily_report/getx_controller/user_model.dart';
-import 'package:daily_report/views/splash_screen.dart';
+import 'package:daily_report/view/common_view/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../main.dart';
+
 
 import 'my_employee_screen.dart';
 import 'my_shop_screen.dart';
@@ -90,6 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.setString("phone", "");
                 prefs.setString("password", "");
+                final errors = await altogic.auth.signOutAll();
                 Get.to(SplashScreen());
               },
             ),

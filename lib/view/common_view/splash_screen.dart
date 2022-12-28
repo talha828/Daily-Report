@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'package:daily_report/getx_controller/user_model.dart';
 import 'package:daily_report/main.dart';
-import 'package:daily_report/views/get_start_screen.dart';
+import 'package:daily_report/view/common_view/get_start_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'dashboard_screen.dart';
+import '../admin_view/dashboard_screen.dart';
+import '../employee_view/main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -24,14 +25,15 @@ class _SplashScreenState extends State<SplashScreen> {
     String? password = prefs.getString("password");
     print(phone);
     print(password);
-    if (phone != null || password != null) {
+    if (phone != null && password != null && phone!.isNotEmpty && password!.isNotEmpty) {
       altogic!.auth.signInWithPhone(phone!, password!).then((value) {
         if (value.user != null) {
           userData.phoneNumber.value = value.user!.phone!;
           userData.id.value = value.user!.id!;
           userData.name.value = value.user!.name!;
-          userData.username.value = value.user!['username']['username'];
-          Get.to(DashboardScreen());
+          userData.username.value = value.user!['username'];
+          userData.status.value = value.user!['status'];
+          userData.status.value =="Employee"?Get.to(MainScreen()):Get.to(DashboardScreen());
         }
       });
     } else {

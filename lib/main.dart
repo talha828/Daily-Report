@@ -1,8 +1,8 @@
 import 'package:altogic/altogic.dart';
 import 'package:daily_report/components/constant/contant.dart';
-import 'package:daily_report/views/dashboard_screen.dart';
-import 'package:daily_report/views/signup_screen.dart';
-import 'package:daily_report/views/splash_screen.dart';
+import 'package:daily_report/view/admin_view/dashboard_screen.dart';
+import 'package:daily_report/view/common_view/splash_screen.dart';
+import 'package:daily_report/view/employee_view/user_not_found.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -51,7 +51,7 @@ class _MyAppState extends AltogicState<MyApp> {
           ),
         ),
       ),
-      home: SplashScreen(),
+      home: UserNotFoundScreen(),
     );
   }
 }

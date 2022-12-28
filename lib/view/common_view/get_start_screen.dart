@@ -1,7 +1,9 @@
 import 'package:daily_report/components/constant/contant.dart';
-import 'package:daily_report/views/signup_screen.dart';
+import 'package:daily_report/view/common_view/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../getx_controller/user_model.dart';
 
 class GetStartScreen extends StatefulWidget {
   const GetStartScreen({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class GetStartScreen extends StatefulWidget {
 }
 
 class _GetStartScreenState extends State<GetStartScreen> {
+  final userData = Get.put(UserModel());
   String label = "Shop Owner";
   var onTap = () {};
   @override
@@ -53,11 +56,15 @@ class _GetStartScreenState extends State<GetStartScreen> {
             ),
             DailyReportButton(
                 onTap: () {
+                  userData.status.value="Admin";
                   Get.to(SignUpScreen());
                 },
                 width: width,
                 label: "Admin"),
-            DailyReportButton(onTap: () {}, width: width, label: "Employee"),
+            DailyReportButton(onTap: () {
+              userData.status.value="Employee";
+              Get.to(SignUpScreen());
+            }, width: width, label: "Employee"),
             SizedBox(
               height: 10,
             ),

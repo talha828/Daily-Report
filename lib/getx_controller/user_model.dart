@@ -5,4 +5,5 @@ class UserModel extends GetxController{
   RxString username= "".obs;
   RxString phoneNumber= "".obs;
   RxString id= "".obs;
+  RxString status= "".obs;
 }

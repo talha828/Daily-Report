@@ -1,12 +1,12 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:daily_report/components/constant/contant.dart';
 import 'package:daily_report/main.dart';
-import 'package:daily_report/views/signup_screen.dart';
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../generated/assets.dart';
-import '../getx_controller/user_model.dart';
+import '../../generated/assets.dart';
+import '../../getx_controller/user_model.dart';
+import '../common_view/signup_screen.dart';
 
 class CreateShopScreen extends StatefulWidget {
   const CreateShopScreen({Key? key}) : super(key: key);

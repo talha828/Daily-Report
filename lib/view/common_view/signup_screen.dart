@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:altogic/altogic.dart';
 import 'package:daily_report/components/constant/contant.dart';
 import 'package:daily_report/getx_controller/user_model.dart';
-import 'package:daily_report/views/get_start_screen.dart';
-import 'package:daily_report/views/dashboard_screen.dart';
-import 'package:daily_report/views/verify_number_screen.dart';
+import 'package:daily_report/view/common_view/get_start_screen.dart';
+import 'package:daily_report/view/admin_view/dashboard_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,8 +13,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:validation_plus/validate.dart';
 
-import '../main.dart';
+import '../../main.dart';
 import 'login_screen.dart';
+
+
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final userData = Get.put(UserModel());
+  final userData = Get.find<UserModel>();
 
   TextEditingController phoneNumber = TextEditingController();
   TextEditingController name = TextEditingController();
@@ -101,11 +102,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 .object(value.user!.id)
                                 .update({
                               'name': name.text,
-                            });
-                            var response =
-                                await altogic.db.model('users.username').set({
+                              'status':userData.status.value,
                               "username": username.text,
-                            }, value.user!.id);
+                            });
+                            Get.to(DashboardScreen());
                           } else {
                             Fluttertoast.showToast(
                                 msg:

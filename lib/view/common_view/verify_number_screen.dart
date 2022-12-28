@@ -1,7 +1,6 @@
-import 'package:daily_report/views/signup_screen.dart';
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 
-import '../components/constant/contant.dart';
+import '../../components/constant/contant.dart';
 
 class VerifyNumberScreen extends StatefulWidget {
   const VerifyNumberScreen({Key? key}) : super(key: key);

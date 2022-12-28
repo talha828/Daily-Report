@@ -1,12 +1,14 @@
-import 'package:daily_report/views/create_employee_screen.dart';
+import 'package:daily_report/components/constant/contant.dart';
+import 'package:daily_report/getx_controller/user_model.dart';
+import 'package:daily_report/model/employee_model.dart';
+import 'package:daily_report/view/admin_view/create_employee_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../components/constant/contant.dart';
-import '../generated/assets.dart';
-import '../getx_controller/user_model.dart';
-import '../main.dart';
-import '../model/employee_model.dart';
+import '../../generated/assets.dart';
+import '../../main.dart';
+
+
 
 class MyEmployeeScreen extends StatefulWidget {
   const MyEmployeeScreen({Key? key}) : super(key: key);
@@ -93,6 +95,7 @@ class _MyEmployeeScreenState extends State<MyEmployeeScreen> {
                       employee[index].employeeName! +
                           "   (${employee[index].shopName})",
                       maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     subtitle: Text(employee[index].phoneNumber!),
                     trailing: InkWell(
