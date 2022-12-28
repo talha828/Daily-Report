@@ -4,7 +4,7 @@ import 'package:altogic/altogic.dart';
 import 'package:daily_report/components/constant/contant.dart';
 import 'package:daily_report/getx_controller/user_model.dart';
 import 'package:daily_report/views/get_start_screen.dart';
-import 'package:daily_report/views/main_screen.dart';
+import 'package:daily_report/views/dashboard_screen.dart';
 import 'package:daily_report/views/verify_number_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -86,11 +86,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             .signUpWithPhone(
                                 phoneNumber.text, passwordConfirm.text)
                             .then((value) async {
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
 
                           if (value.user != null) {
-                            prefs.setString('phone',phoneNumber.text);
-                            prefs.setString('password',password.text);
+                            prefs.setString('phone', phoneNumber.text);
+                            prefs.setString('password', password.text);
                             userData.id.value = value.user!.id;
                             userData.name.value = name.text;
                             userData.username.value = username.text;
@@ -130,8 +131,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     Text("Your Already Have an Account? "),
                     InkWell(
-                        onTap: ()=>Get.to(LoginScreen()),
-                        child: Text("Login",style: TextStyle(color: appMainColor,fontWeight: FontWeight.bold),)),
+                        onTap: () => Get.to(LoginScreen()),
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                              color: appMainColor, fontWeight: FontWeight.bold),
+                        )),
                   ],
                 )
               ],

@@ -11,32 +11,59 @@ class GetStartScreen extends StatefulWidget {
 }
 
 class _GetStartScreenState extends State<GetStartScreen> {
-  String label="Shop Owner";
-  var onTap=(){};
+  String label = "Shop Owner";
+  var onTap = () {};
   @override
   Widget build(BuildContext context) {
-    var width =MediaQuery.of(context).size.width;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding:EdgeInsets.symmetric(vertical: 0,horizontal: width *  0.06),
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: width * 0.06),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: 10,),
-            SizedBox(height: 10,),
-            SizedBox(height: 10,),
-            Text("Welcome",style: TextStyle(fontSize: width * 0.06,fontWeight: FontWeight.bold),),
-            Text("Daily Report",style: TextStyle(fontSize: width * 0.07,fontWeight: FontWeight.bold),),
-            Image.asset("assets/img/getstart.png",),
-            Text("Continues as",style: TextStyle(fontSize: width * 0.07,fontWeight: FontWeight.w500),),
-            DailyReportButton(onTap: () {
-              Get.to(SignUpScreen());
-            }, width: width, label: "Admin"),
-            DailyReportButton(onTap: (){}, width: width, label: "Employee"),
-            SizedBox(height: 10,),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Welcome",
+              style: TextStyle(
+                  fontSize: width * 0.06, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "Daily Report",
+              style: TextStyle(
+                  fontSize: width * 0.07, fontWeight: FontWeight.bold),
+            ),
+            Image.asset(
+              "assets/img/getstart.png",
+            ),
+            Text(
+              "Continues as",
+              style: TextStyle(
+                  fontSize: width * 0.07, fontWeight: FontWeight.w500),
+            ),
+            DailyReportButton(
+                onTap: () {
+                  Get.to(SignUpScreen());
+                },
+                width: width,
+                label: "Admin"),
+            DailyReportButton(onTap: () {}, width: width, label: "Employee"),
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              height: 10,
+            ),
           ],
         ),
       ),
