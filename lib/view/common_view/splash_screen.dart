@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../admin_view/dashboard_screen.dart';
 import '../employee_view/main_screen.dart';
+import '../employee_view/user_not_found.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -33,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
           userData.name.value = value.user!.name!;
           userData.username.value = value.user!['username'];
           userData.status.value = value.user!['status'];
-          userData.status.value =="Employee"?Get.to(MainScreen()):Get.to(DashboardScreen());
+          userData.status.value =="Employee"?Get.to(UserNotFoundScreen()):Get.to(DashboardScreen());
         }
       });
     } else {

@@ -1,13 +1,17 @@
+import 'dart:async';
+
 import 'package:daily_report/getx_controller/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:intl/intl.dart';
 import '../../components/constant/contant.dart';
 import '../../generated/assets.dart';
 import '../../main.dart';
+import '../../model/emploeey_shop_details_model.dart';
 import '../common_view/splash_screen.dart';
+import 'new_report-screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -17,17 +21,33 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final userData=Get.find<UserModel>();
+  final userData = Get.find<UserModel>();
+  final employee = Get.find<EmployeeShopDetails>();
+  late String _timeString;
+
+  @override
+  void initState() {
+    _timeString = _formatDateTime(DateTime.now());
+    Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var width=MediaQuery.of(context).size.width;
-    var height=MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar:AppBar(
-        leading: InkWell(
-            onTap: () => Navigator.pop(context),
-            child: Icon(Icons.arrow_back_ios)),
-        title: Text("Daily Report"),
+      appBar: AppBar(
+        elevation: 0,
+        actions: [
+          InkWell(
+              onTap: () => Navigator.pop(context),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.edit),
+              )),
+        ],
+        //title: Text("Daily Report"),
       ),
       drawer: Drawer(
         child: ListView(
@@ -54,6 +74,14 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
             ListTile(
+              leading: Image.asset(Assets.iconHouse,
+                  width: width * 0.07, height: width * 0.07),
+              title: const Text(' Home '),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
               leading: Image.asset(Assets.iconEdit,
                   width: width * 0.07, height: width * 0.07),
               title: const Text(' Edit Profile '),
@@ -76,6 +104,96 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
       ),
+      body: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              color: appMainColor,
+              height: width * 0.5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    employee.shopName.value,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: width * 0.1,
+                        color: Colors.white),
+                  ),
+                  SizedBox(
+                    height: width * 0.04,
+                  ),
+                  Text(
+                    employee.ownerName.value,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: width * 0.05,
+                        color: Colors.white),
+                  ),
+                  SizedBox(
+                    height: width * 0.04,
+                  ),
+                  Text(
+                    _timeString,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: width * 0.15,
+                        color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: width * 0.04,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+              child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        border: Border.all(
+                            width: 2, color: Colors.grey.withOpacity(0.5))),
+                    child: ListTile(
+                      onTap: ()=>Get.to(NewReportScreen()),
+                      leading: Icon(
+                        Icons.add,
+                        color: Colors.grey.withOpacity(0.5),
+                      ),
+                      title: Text(
+                        "New Report",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios_outlined,
+                        color: Colors.grey.withOpacity(0.5),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+          ],
+        ),
+      ),
     );
+  }
+
+  void _getTime() {
+    final DateTime now = DateTime.now();
+    final String formattedDateTime = _formatDateTime(now);
+    setState(() {
+      _timeString = formattedDateTime;
+    });
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return DateFormat('hh:mm:ss').format(dateTime);
   }
 }

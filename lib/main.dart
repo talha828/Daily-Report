@@ -51,7 +51,7 @@ class _MyAppState extends AltogicState<MyApp> {
           ),
         ),
       ),
-      home: UserNotFoundScreen(),
+      home: SplashScreen(),
     );
   }
 }

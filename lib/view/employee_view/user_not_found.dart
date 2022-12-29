@@ -4,8 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/constant/contant.dart';
 import '../../generated/assets.dart';
+import '../../getx_controller/user_model.dart';
 import '../../main.dart';
+import '../../model/emploeey_shop_details_model.dart';
 import '../common_view/splash_screen.dart';
+import 'main_screen.dart';
 
 class UserNotFoundScreen extends StatefulWidget {
   const UserNotFoundScreen({Key? key}) : super(key: key);
@@ -15,6 +18,31 @@ class UserNotFoundScreen extends StatefulWidget {
 }
 
 class _UserNotFoundScreenState extends State<UserNotFoundScreen> {
+  final userData=Get.find<UserModel>();
+  final employeeData=Get.put(EmployeeShopDetails());
+  checkUserRecord()async{
+    await altogic.db
+        .model('users.employee')
+        .filter('phoneNumber == "${userData.phoneNumber.value}"')
+        .get().then((value){
+          if(value.data != null){
+            employeeData.employeeName.value=value.data[0]["employeeName"];
+            employeeData.employeeUserName.value=value.data[0]["employeeUserName"];
+            employeeData.employeePhoneNumber.value=value.data[0]['phoneNumber'];
+            employeeData.ownerName.value=value.data[0]['ownerName'];
+            employeeData.ownerUserName.value=value.data[0]['ownerUserName'];
+            employeeData.shopName.value=value.data[0]['shopName'];
+            employeeData.shopId.value=value.data[0]['shopId'];
+            employeeData.id.value=value.data[0]['_id'];
+            Get.to(MainScreen());
+          }
+    });
+  }
+  @override
+  void initState() {
+    checkUserRecord();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     var width=MediaQuery.of(context).size.width;
