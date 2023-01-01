@@ -14,6 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:validation_plus/validate.dart';
 
 import '../../main.dart';
+import '../employee_view/user_not_found.dart';
 import 'login_screen.dart';
 
 
@@ -105,7 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               'status':userData.status.value,
                               "username": username.text,
                             });
-                            Get.to(DashboardScreen());
+                            userData.status.value =="Employee"?Get.to(UserNotFoundScreen()):Get.to(DashboardScreen());
                           } else {
                             Fluttertoast.showToast(
                                 msg:

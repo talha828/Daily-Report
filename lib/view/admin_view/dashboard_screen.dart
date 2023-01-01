@@ -1,3 +1,4 @@
+import 'package:altogic/altogic.dart';
 import 'package:daily_report/components/constant/contant.dart';
 import 'package:daily_report/generated/assets.dart';
 import 'package:daily_report/getx_controller/user_model.dart';
@@ -6,9 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../getx_controller/items_controller.dart';
+import '../../getx_controller/shop_report_controller.dart';
 import '../../main.dart';
 
-
+import '../../model/my_reports_model.dart';
+import '../../model/shop_and_items_model.dart';
+import '../../model/shop_model.dart';
+import '../employee_view/show_report_screen.dart';
 import 'my_employee_screen.dart';
 import 'my_shop_screen.dart';
 
@@ -21,6 +27,63 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final userData = Get.find<UserModel>();
+  final shopReport=Get.put(ShopReportController());
+  final item = Get.put(ItemController());
+
+  List<ShopModel> shops = [];
+  getReports() async {
+    shops.clear();
+    List<MyReportModel> list = [];
+    var data = await altogic.db
+        .model('users.shop')
+        .filter('username == "${userData.username.value}"')
+        .get()
+        .then((value) async {
+      if (value.errors == null) {
+        for (var i in value.data) {
+          shops.add(ShopModel(
+              ownerName: i['ownerName'],
+              userName: i['username'],
+              shopName: i['shopName'],
+              address: i['address'],
+              id: i['_id']));
+        }
+        shops.forEach((element) async {
+          var data = await altogic.db
+              .model('users.Reports')
+              .filter('shopName == "${element.shopName}"')
+              .get().then((value) {
+            if (value.errors == null) {
+              print(value.data.toString());
+              value.data!.forEach((element) {
+                list.add(MyReportModel.fromJson(element));
+              });
+              shopReport.list.clear();
+              shopReport.list.add(ShopAndItemsModel(shopName: element.shopName,list: list));
+              setState(() {});
+            }
+          });
+
+        });
+      }
+    });
+    // for (var i in data.data) {
+    //   shops.add(ShopModel(
+    //       ownerName: i['ownerName'],
+    //       userName: i['username'],
+    //       shopName: i['shopName'],
+    //       address: i['address'],
+    //       id: i['_id']));
+    // }
+    // setState(() {});
+  }
+
+  @override
+  void initState() {
+    getReports();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -29,10 +92,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
         centerTitle: true,
         title: Text("Dashboard"),
         actions: [
+          InkWell(
+              onTap: getReports,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.refresh),
+              )),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Icon(Icons.edit),
-          )
+          ),
         ],
       ),
       drawer: Drawer(
@@ -105,22 +174,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
             vertical: width * 0.04, horizontal: width * 0.04),
         child: Column(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                  border:
-                      Border.all(width: 2, color: Colors.grey.withOpacity(0.5)),
-                  borderRadius: BorderRadius.circular(7)),
-              child: ListTile(
-                leading: Icon(
-                  Icons.add,
-                  color: Colors.grey,
+             shopReport.list != null? ListView.separated(
+                shrinkWrap: true,
+                itemBuilder: (context,i){return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                shopReport.list[i].shopName!,
+                  style: TextStyle(
+                      fontSize: width * 0.08, fontWeight: FontWeight.bold),
                 ),
-                title: Text("Create New Report"),
-              ),
-            ),
-            SizedBox(
-              height: width * 0.04,
-            ),
+                SizedBox(height: width * 0.04,),
+                ListView.separated(
+                  separatorBuilder: (context,index){return SizedBox(height: width * 0.04,);},
+                  itemBuilder: (context,index){return Container(
+                    margin: EdgeInsets.symmetric(horizontal: width * 0.04),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: appMainColor),
+                        borderRadius: BorderRadius.circular(7)
+                    ),
+                    child: ListTile(
+                      onTap: (){
+                        item.items.value= shopReport.list[i].list![index];
+                        Get.to(ShowReportScreen());
+                      },
+                      leading: Image.asset(Assets.iconDocument,width: width * 0.07,height: width * 0.07,),
+                      title: Text(shopReport.list[i].list![index].date!.replaceAll(":", "-")),
+                      trailing: Icon(Icons.arrow_forward_ios_outlined),
+                    ),
+                  ); },
+                  itemCount:shopReport.list[i].list!.length ,
+                  shrinkWrap: true,
+                )
+              ],
+            );}, separatorBuilder:(context,index){return SizedBox(height: width * 0.04);}, itemCount: shopReport.list.length):Container()
           ],
         ),
       ),

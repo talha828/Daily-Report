@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:daily_report/components/constant/contant.dart';
+import 'package:daily_report/getx_controller/items_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -8,20 +9,20 @@ import '../../getx_controller/report_view_controller.dart';
 import '../../getx_controller/user_model.dart';
 import '../../main.dart';
 import '../../model/emploeey_shop_details_model.dart';
+import '../../model/my_reports_model.dart';
 
-class ViewReportScreen extends StatefulWidget {
-  const ViewReportScreen({Key? key}) : super(key: key);
+class ShowReportScreen extends StatefulWidget {
+  const ShowReportScreen({Key? key}) : super(key: key);
 
   @override
-  State<ViewReportScreen> createState() => _ViewReportScreenState();
+  State<ShowReportScreen> createState() => _ShowReportScreenState();
 }
 
-class _ViewReportScreenState extends State<ViewReportScreen> {
-  final userData = Get.find<UserModel>();
-  final employee = Get.find<EmployeeShopDetails>();
-  final controller = Get.find<ReportViewController>();
+class _ShowReportScreenState extends State<ShowReportScreen> {
+  final  controller=Get.find<ItemController>();
   @override
   Widget build(BuildContext context) {
+    controller.items.value.items!.sort((a,b)=>a.credit!.compareTo(b.credit!));
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -37,36 +38,8 @@ class _ViewReportScreenState extends State<ViewReportScreen> {
         child: ElevatedButton(
           onPressed: () async {
 
-            altogic.db.model("users.Reports").append({
-              "shopName":employee.shopName.value,
-              "shopId":employee.shopId.value,
-              "ownerName":employee.ownerName.value,
-              "employeeId":employee.id.value,
-              "employeeName":employee.employeeName.value,
-              "date":DateFormat('dd:MM:yy').format(DateTime.now())
-            },userData.id.value).then((value){
-              controller.controller.forEach((element) {
-                altogic.db.model("users.Reports.report").append({
-                  "product":element.product,
-                  "credit":element.credit,
-                  "debit":element.debit,
-                  "differ":element.ramming,
-                },value.data['_id']);
-              });
-              AwesomeDialog(
-                context: context,
-                dialogType: DialogType.info,
-                animType: AnimType.rightSlide,
-                title: 'Congratulation',
-                desc: 'Your Report successfully save',
-                btnOkColor: appMainColor,
-                btnOkOnPress: () {
-                  Navigator.of(context)..pop()..pop();
-                },
-              )..show();
-            });
           },
-          child: Text("Submit"),
+          child: Text("Okay"),
         ),
       ),
       body: Padding(
@@ -76,7 +49,7 @@ class _ViewReportScreenState extends State<ViewReportScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              employee.shopName.value,
+              controller.items.value.shopName!,
               style: TextStyle(
                   fontSize: width * 0.08, fontWeight: FontWeight.bold),
             ),
@@ -84,7 +57,7 @@ class _ViewReportScreenState extends State<ViewReportScreen> {
               height: width * 0.02,
             ),
             Text(
-              employee.ownerName.value,
+              controller.items.value.ownerName!,
               style: TextStyle(fontSize: width * 0.05, color: Colors.grey),
             ),
             SizedBox(
@@ -101,6 +74,7 @@ class _ViewReportScreenState extends State<ViewReportScreen> {
               height: width * 0.04,
             ),
             DataTable(
+              sortAscending: false,
               // checkboxHorizontalMargin: 2,
               columnSpacing: width * 0.05,
               showBottomBorder: true,
@@ -109,22 +83,25 @@ class _ViewReportScreenState extends State<ViewReportScreen> {
                   label: Text('Product'),
                 ),
                 DataColumn(
+                  numeric: true,
                   label: Text('Credit'),
                 ),
                 DataColumn(
+                  numeric: true,
                   label: Text('Debit'),
                 ),
                 DataColumn(
+                  numeric: true,
                   label: Text('Differ'),
                 ),
               ],
-              rows: controller.controller
+              rows: controller.items.value.items!
                   .map((element) => DataRow(cells: [
-                        DataCell(Text(element.product!.length > 10?element.product!.substring(0,11): element.product.toString(),maxLines: 1,overflow: TextOverflow.ellipsis,)),
-                        DataCell(Text(element.credit.toString())),
-                        DataCell(Text(element.debit.toString())),
-                        DataCell(Text(element.ramming.toString())),
-                      ]))
+                DataCell(Text(element.productName!.length > 10?element.productName!.substring(0,11): element.productName.toString(),maxLines: 1,overflow: TextOverflow.ellipsis,)),
+                DataCell(Text(element.credit.toString())),
+                DataCell(Text(element.debit.toString())),
+                DataCell(Text(element.differ.toString())),
+              ]))
                   .toList(),
             )
           ],

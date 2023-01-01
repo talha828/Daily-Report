@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../getx_controller/user_model.dart';
+import '../employee_view/user_not_found.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -62,13 +63,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         await SharedPreferences.getInstance();
                     if (value.user != null) {
                       prefs.setString('phone', phoneNumber.text);
-                      prefs.setString('password', password.text);
+                      prefs.setString('password', password.text.toString());
                       userData.phoneNumber.value = value.user!.phone!;
                       userData.id.value = value.user!.id!;
                       userData.name.value = value.user!.name!;
                       userData.username.value =
-                          value.user!['username']['username'];
-                      Get.to(DashboardScreen());
+                          value.user!['username'];
+                      userData.status.value =="Employee"?Get.to(UserNotFoundScreen()):Get.to(DashboardScreen());
                     }
                     return value;
                   });

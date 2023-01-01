@@ -37,7 +37,7 @@ class _NewReportScreenState extends State<NewReportScreen> {
           controllers.forEach((element) {
             controller.controller.add(ReportModel(product:element.product!.text.toString() ,credit:element.credit!.text.toString() ,debit:element.debit!.text.toString(),ramming: (int.parse(element.credit!.text.toString()) - int.parse(element.debit!.text.toString())).toString() ));
             creditTotal=creditTotal+double.parse(element.credit!.text.toString());
-            debitTotal=creditTotal+double.parse(element.debit!.text.toString());
+            debitTotal=debitTotal+double.parse(element.debit!.text.toString());
             rammingTotal=rammingTotal + double.parse((int.parse(element.credit!.text.toString()) - int.parse(element.debit!.text.toString())).toString());
           });
           controller.controller.add(ReportModel(product:"Total" ,credit:creditTotal.toStringAsFixed(0) ,debit:debitTotal.toStringAsFixed(0),ramming:rammingTotal.toStringAsFixed(0) ));
