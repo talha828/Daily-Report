@@ -33,14 +33,16 @@ class _NewReportScreenState extends State<NewReportScreen> {
           controller.controller.clear();
           double creditTotal=00.0;
           double debitTotal=00.0;
+          double rammingTotal=00.0;
           controllers.forEach((element) {
-            controller.controller.add(ReportModel(product:element.product!.text.toString() ,credit:element.credit!.text.toString() ,debit:element.debit!.text.toString() ));
+            controller.controller.add(ReportModel(product:element.product!.text.toString() ,credit:element.credit!.text.toString() ,debit:element.debit!.text.toString(),ramming: (int.parse(element.credit!.text.toString()) - int.parse(element.debit!.text.toString())).toString() ));
             creditTotal=creditTotal+double.parse(element.credit!.text.toString());
             debitTotal=creditTotal+double.parse(element.debit!.text.toString());
+            rammingTotal=rammingTotal + double.parse((int.parse(element.credit!.text.toString()) - int.parse(element.debit!.text.toString())).toString());
           });
-          controller.controller.add(ReportModel(product:"Total" ,credit:creditTotal.toStringAsFixed(0) ,debit:debitTotal.toStringAsFixed(0)));
+          controller.controller.add(ReportModel(product:"Total" ,credit:creditTotal.toStringAsFixed(0) ,debit:debitTotal.toStringAsFixed(0),ramming:rammingTotal.toStringAsFixed(0) ));
           Get.to(ViewReportScreen());
-        },child: Text("Submit"),),
+        },child: Text("View Report"),),
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -55,16 +57,19 @@ class _NewReportScreenState extends State<NewReportScreen> {
           FloatingActionButton(
             heroTag: "2",
             onPressed: (){
+
             controllers.add(ControllerModel(
-                product: TextEditingController(),
-                credit: TextEditingController(),
-                debit: TextEditingController()));
+                product:TextEditingController(),
+                credit:TextEditingController(),
+                debit:TextEditingController(),));
+
             widgetList.add(
               ReporterTextField(
                   width: width,
                   title: controllers.last.product!,
                   credit: controllers.last.credit!,
-                  debit: controllers.last.debit!),
+                  debit: controllers.last.debit!,
+              ),
             );
             setState(() {});
           },child:Icon(Icons.add),backgroundColor: Colors.green,),
@@ -82,6 +87,7 @@ class _NewReportScreenState extends State<NewReportScreen> {
               horizontal: width * 0.04, vertical: width * 0.04),
           child: Column(
             children: [
+
               ListView.separated(
                   shrinkWrap: true,
                   itemBuilder: (context,index){
@@ -115,6 +121,7 @@ class ReporterTextField extends StatefulWidget {
   final TextEditingController credit;
   final TextEditingController debit;
 
+
   @override
   State<ReporterTextField> createState() => _ReporterTextFieldState();
 }
@@ -128,6 +135,7 @@ class _ReporterTextFieldState extends State<ReporterTextField> {
         Container(
           width: widget.width * 0.3,
           child: TextField(
+            //style: TextStyle(fontSize: widget.width * 0.035),
             controller: widget.title,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(
@@ -139,6 +147,7 @@ class _ReporterTextFieldState extends State<ReporterTextField> {
         Container(
           width: widget.width * 0.235,
           child: TextField(
+            //style: TextStyle(fontSize: widget.width * 0.035),
             controller: widget.credit,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(
@@ -150,6 +159,7 @@ class _ReporterTextFieldState extends State<ReporterTextField> {
         Container(
           width: widget.width * 0.235,
           child: TextField(
+            //style: TextStyle(fontSize: widget.width * 0.035),
             controller: widget.debit,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(
