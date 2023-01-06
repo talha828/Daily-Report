@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 
 import '../../components/constant/contant.dart';
 
-
 class MyShopScreen extends StatefulWidget {
   const MyShopScreen({Key? key}) : super(key: key);
 

@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.usama.dailyreport.daily_report">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="daily_report"
+        android:label="Daily Report"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

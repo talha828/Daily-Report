@@ -3,6 +3,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:get/get.dart';
 
 import '../../components/constant/contant.dart';
+import '../../components/widgets/textField.dart';
 import '../../generated/assets.dart';
 import '../../getx_controller/user_model.dart';
 import '../../main.dart';

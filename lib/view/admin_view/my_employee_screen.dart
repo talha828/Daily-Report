@@ -8,8 +8,6 @@ import 'package:get/get.dart';
 import '../../generated/assets.dart';
 import '../../main.dart';
 
-
-
 class MyEmployeeScreen extends StatefulWidget {
   const MyEmployeeScreen({Key? key}) : super(key: key);
 

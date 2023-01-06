@@ -26,7 +26,10 @@ class _SplashScreenState extends State<SplashScreen> {
     String? password = prefs.getString("password");
     print(phone);
     print(password);
-    if (phone != null && password != null && phone!.isNotEmpty && password!.isNotEmpty) {
+    if (phone != null &&
+        password != null &&
+        phone!.isNotEmpty &&
+        password!.isNotEmpty) {
       altogic!.auth.signInWithPhone(phone!, password!).then((value) {
         if (value.user != null) {
           userData.phoneNumber.value = value.user!.phone!;
@@ -34,7 +37,9 @@ class _SplashScreenState extends State<SplashScreen> {
           userData.name.value = value.user!.name!;
           userData.username.value = value.user!['username'];
           userData.status.value = value.user!['status'];
-          userData.status.value =="Employee"?Get.to(UserNotFoundScreen()):Get.to(DashboardScreen());
+          userData.status.value == "Employee"
+              ? Get.to(UserNotFoundScreen())
+              : Get.to(DashboardScreen());
         }
       });
     } else {

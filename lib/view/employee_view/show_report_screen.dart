@@ -19,10 +19,11 @@ class ShowReportScreen extends StatefulWidget {
 }
 
 class _ShowReportScreenState extends State<ShowReportScreen> {
-  final  controller=Get.find<ItemController>();
+  final controller = Get.find<ItemController>();
   @override
   Widget build(BuildContext context) {
-    controller.items.value.items!.sort((a,b)=>a.credit!.compareTo(b.credit!));
+    controller.items.value.items!
+        .sort((a, b) => a.credit!.compareTo(b.credit!));
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -36,75 +37,81 @@ class _ShowReportScreenState extends State<ShowReportScreen> {
         padding: EdgeInsets.symmetric(
             horizontal: width * 0.04, vertical: width * 0.04),
         child: ElevatedButton(
-          onPressed: () async {
-
-          },
+          onPressed: () async {},
           child: Text("Okay"),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: width * 0.04, horizontal: width * 0.04),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              controller.items.value.shopName!,
-              style: TextStyle(
-                  fontSize: width * 0.08, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: width * 0.02,
-            ),
-            Text(
-              controller.items.value.ownerName!,
-              style: TextStyle(fontSize: width * 0.05, color: Colors.grey),
-            ),
-            SizedBox(
-              height: width * 0.02,
-            ),
-            Text(
-              "Date:  " +
-                  DateFormat('dd-MM-yyyy').format(DateTime.now()).toString(),
-              style: TextStyle(
-                fontSize: width * 0.04,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: width * 0.04, horizontal: width * 0.04),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                controller.items.value.shopName!,
+                style: TextStyle(
+                    fontSize: width * 0.08, fontWeight: FontWeight.bold),
               ),
-            ),
-            SizedBox(
-              height: width * 0.04,
-            ),
-            DataTable(
-              sortAscending: false,
-              // checkboxHorizontalMargin: 2,
-              columnSpacing: width * 0.05,
-              showBottomBorder: true,
-              columns: [
-                DataColumn(
-                  label: Text('Product'),
+              SizedBox(
+                height: width * 0.02,
+              ),
+              Text(
+                controller.items.value.employeeName!,
+                style: TextStyle(fontSize: width * 0.05, color: Colors.grey),
+              ),
+              SizedBox(
+                height: width * 0.02,
+              ),
+              Text(
+                "Date:  " +
+                    DateFormat('dd-MM-yyyy').format(DateTime.now()).toString(),
+                style: TextStyle(
+                  fontSize: width * 0.04,
                 ),
-                DataColumn(
-                  numeric: true,
-                  label: Text('Credit'),
-                ),
-                DataColumn(
-                  numeric: true,
-                  label: Text('Debit'),
-                ),
-                DataColumn(
-                  numeric: true,
-                  label: Text('Differ'),
-                ),
-              ],
-              rows: controller.items.value.items!
-                  .map((element) => DataRow(cells: [
-                DataCell(Text(element.productName!.length > 10?element.productName!.substring(0,11): element.productName.toString(),maxLines: 1,overflow: TextOverflow.ellipsis,)),
-                DataCell(Text(element.credit.toString())),
-                DataCell(Text(element.debit.toString())),
-                DataCell(Text(element.differ.toString())),
-              ]))
-                  .toList(),
-            )
-          ],
+              ),
+              SizedBox(
+                height: width * 0.04,
+              ),
+              DataTable(
+                sortAscending: false,
+                // checkboxHorizontalMargin: 2,
+                columnSpacing: width * 0.05,
+                showBottomBorder: true,
+                columns: [
+                  DataColumn(
+                    label: Text('Product'),
+                  ),
+                  DataColumn(
+                    numeric: true,
+                    label: Text('Credit'),
+                  ),
+                  DataColumn(
+                    numeric: true,
+                    label: Text('Debit'),
+                  ),
+                  DataColumn(
+                    numeric: true,
+                    label: Text('Differ'),
+                  ),
+                ],
+                rows: controller.items.value.items!
+                    .map((element) => DataRow(cells: [
+                          DataCell(Text(
+                            element.productName!.length > 10
+                                ? element.productName!.substring(0, 11)
+                                : element.productName.toString(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )),
+                          DataCell(Text(element.credit.toString())),
+                          DataCell(Text(element.debit.toString())),
+                          DataCell(Text(element.differ.toString())),
+                        ]))
+                    .toList(),
+              )
+            ],
+          ),
         ),
       ),
     );
