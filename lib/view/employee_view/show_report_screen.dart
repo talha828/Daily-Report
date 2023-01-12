@@ -22,8 +22,8 @@ class _ShowReportScreenState extends State<ShowReportScreen> {
   final controller = Get.find<ItemController>();
   @override
   Widget build(BuildContext context) {
-    controller.items.value.items!
-        .sort((a, b) => a.credit!.compareTo(b.credit!));
+    // controller.items.value.items!
+    //     .sort((a, b) => a.credit!.compareTo(b.credit!));
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -84,31 +84,34 @@ class _ShowReportScreenState extends State<ShowReportScreen> {
                   ),
                   DataColumn(
                     numeric: true,
-                    label: Text('Credit'),
+                    label: Text('Debit'),
                   ),
                   DataColumn(
                     numeric: true,
-                    label: Text('Debit'),
+                    label: Text('Credit'),
                   ),
                   DataColumn(
                     numeric: true,
                     label: Text('Differ'),
                   ),
                 ],
-                rows: controller.items.value.items!
-                    .map((element) => DataRow(cells: [
-                          DataCell(Text(
-                            element.productName!.length > 10
-                                ? element.productName!.substring(0, 11)
-                                : element.productName.toString(),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          )),
-                          DataCell(Text(element.credit.toString())),
-                          DataCell(Text(element.debit.toString())),
-                          DataCell(Text(element.differ.toString())),
-                        ]))
-                    .toList(),
+                rows:  [
+                  for(int i=0; i< controller.items.value.items![0].productName!.length;i++)
+                    DataRow(cells: [
+                      DataCell(Text(
+                        controller.items.value.items![0].productName![i].length > 10
+                            ? controller.items.value.items![0].productName![i].substring(0, 11)
+                            : controller.items.value.items![0].productName![i].toString(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      )),
+                      DataCell(Text(controller.items.value.items![0].credit![i].toString())),
+                      DataCell(Text(controller.items.value.items![0].debit![i].toString())),
+                      DataCell(Text(controller.items.value.items![0].differ![i].toString())),
+                    ])
+                    ]
+
+
               )
             ],
           ),

@@ -41,33 +41,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
         .filter('username == "${userData.username.value}"')
         .get()
         .then((value) async {
-      if (value.errors == null) {
-        for (var i in value.data) {
-          shops.add(ShopModel(
-              ownerName: i['ownerName'],
-              userName: i['username'],
-              shopName: i['shopName'],
-              address: i['address'],
-              id: i['_id']));
-        }
-        shops.forEach((element) async {
-          var data = await altogic.db
-              .model('users.Reports')
-              .filter('shopName == "${element.shopName}"')
-              .get()
-              .then((value) {
-            if (value.errors == null) {
-              print(value.data.toString());
-              value.data!.forEach((element) {
-                list.add(MyReportModel.fromJson(element));
-              });
-              shopReport.list.clear();
-              shopReport.list.add(
-                  ShopAndItemsModel(shopName: element.shopName, list: list));
-              setLoading(false);
-            }
+      if (value.errors == null ) {
+        if(value.data.length > 0){
+          for (var i in value.data) {
+            shops.add(ShopModel(
+                ownerName: i['ownerName'],
+                userName: i['username'],
+                shopName: i['shopName'],
+                address: i['address'],
+                id: i['_id']));
+          }
+          shops.forEach((element) async {
+            var data = await altogic.db
+                .model('users.Reports')
+                .filter('shopName == "${element.shopName}"')
+                .get()
+                .then((value) {
+              if (value.errors == null) {
+                print(value.data.toString());
+                value.data!.forEach((element) {
+                  list.add(MyReportModel.fromJson(element));
+                });
+                shopReport.list.clear();
+                shopReport.list.add(
+                    ShopAndItemsModel(shopName: element.shopName, list: list));
+                setLoading(false);
+              }
+            });
           });
-        });
+        }else{
+          setLoading(false);
+        }
+      }else{
+        setLoading(false);
       }
     }).catchError((e){
       setLoading(false);

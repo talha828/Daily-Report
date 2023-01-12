@@ -41,16 +41,16 @@ class _NewReportScreenState extends State<NewReportScreen> {
                   product: element.product!.text.toString(),
                   credit: element.credit!.text.toString(),
                   debit: element.debit!.text.toString(),
-                  ramming: (int.parse(element.credit!.text.toString()) -
-                          int.parse(element.debit!.text.toString()))
+                  ramming: (int.parse(element.debit!.text.toString()) -
+                          int.parse(element.credit!.text.toString()))
                       .toString()));
               creditTotal =
                   creditTotal + double.parse(element.credit!.text.toString());
               debitTotal =
                   debitTotal + double.parse(element.debit!.text.toString());
               rammingTotal = rammingTotal +
-                  double.parse((int.parse(element.credit!.text.toString()) -
-                          int.parse(element.debit!.text.toString()))
+                  double.parse((int.parse(element.debit!.text.toString()) -
+                          int.parse(element.credit!.text.toString()))
                       .toString());
             });
             controller.controller.add(ReportModel(
@@ -185,7 +185,7 @@ class _ReporterTextFieldState extends State<ReporterTextField> {
               contentPadding: EdgeInsets.symmetric(
                   horizontal: widget.width * 0.03,
                   vertical: widget.width * 0.01),
-              labelText: "Credit",
+              labelText: "Debit",
             ),
           ),
         ),
@@ -198,7 +198,7 @@ class _ReporterTextFieldState extends State<ReporterTextField> {
               contentPadding: EdgeInsets.symmetric(
                   horizontal: widget.width * 0.03,
                   vertical: widget.width * 0.01),
-              labelText: "Debit",
+              labelText: "Credit",
             ),
           ),
         ),

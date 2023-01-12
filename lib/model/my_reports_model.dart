@@ -25,7 +25,7 @@ class MyReportModel{
    date=json['date'];
    if(json['report'] != null){
      json['report'].forEach((value){
-       items!.add(MyReportItem(id: value["_id"], parent: value['_parent'], productName: value['product'], credit: value['credit'], debit: value['debit'], differ: value['differ']));
+       items!.add(MyReportItem(id: value["_id"], parent: value['_parent'], productName: value['myproduct'], credit: value['mycredit'], debit: value['mydebit'], differ: value['mydiffer']));
      });}
   }
 
@@ -35,9 +35,9 @@ class MyReportModel{
 class MyReportItem{
   String? id;
   String? parent;
-  String? productName;
-  String? credit;
-  String? debit;
-  String? differ;
+  List? productName;
+  List? credit;
+  List? debit;
+  List? differ;
   MyReportItem({required this.id,required this.parent,required this.productName,required this.credit,required this.debit,required this.differ});
 }

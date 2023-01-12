@@ -84,7 +84,7 @@ class _MyShopScreenState extends State<MyShopScreen> {
                         child: Image.asset(Assets.iconShop,
                             width: width * 0.06, height: width * 0.06)),
                     title: Text(shops[index].shopName!),
-                    subtitle: Text(shops[index].address!),
+                    subtitle: Text(shops[index].address.toString()=="null" ?" No address":shops[index].address!),
                     trailing: InkWell(
                         onTap: () async {
                           var result = await altogic.db

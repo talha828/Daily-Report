@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:daily_report/components/constant/contant.dart';
 import 'package:daily_report/main.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import '../../components/widgets/textField.dart';
@@ -55,29 +56,38 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
               ElevatedButton(
                   onPressed: () async {
                     //TODO validation and loading
-                    altogic.db.model("users.shop").append({
-                      "_parent": userData.id.value,
-                      "shopName": shopName.text,
-                      "ownerName": ownerName.text.isEmpty
-                          ? userData.name.value
-                          : ownerName.text,
-                      "address": address.text,
-                      "username": userName.text.isEmpty
-                          ? userData.username.value
-                          : userName.text,
-                    }, userData.id.value).then((value) async {
-                      AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.info,
-                        animType: AnimType.rightSlide,
-                        title: 'Congratulation',
-                        desc: 'Your Shop successfully created',
-                        btnOkColor: appMainColor,
-                        btnOkOnPress: () {
-                          Navigator.of(context)..pop();
-                        },
-                      )..show();
-                    });
+                    if(validation()){
+                      altogic.db.model("users.shop").append({
+                        "_parent": userData.id.value,
+                        "shopName": shopName.text,
+                        "ownerName": ownerName.text.isEmpty
+                            ? userData.name.value
+                            : ownerName.text,
+                        "address": address.text,
+                        "username": userName.text.isEmpty
+                            ? userData.username.value
+                            : userName.text,
+                      }, userData.id.value).then((value) async {
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.info,
+                          animType: AnimType.rightSlide,
+                          title: 'Congratulation',
+                          desc: 'Your Shop successfully created',
+                          btnOkColor: appMainColor,
+                          btnOkOnPress: () {
+                            Navigator.of(context)..pop();
+                          },
+                        )..show();
+                      });
+                    }else{
+                      Fluttertoast.showToast(
+                          msg: "Please fill all missing credential correctly",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+                    }
                   },
                   child: Text("Create Shop"))
             ],
@@ -85,5 +95,16 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
         ),
       ),
     );
+  }
+  bool validation(){
+    if(shopName.text.isEmpty) return false;
+    if(ownerName.text.isEmpty
+        ? userData.name.value.isEmpty
+        : ownerName.text.isEmpty) return false;
+    if(address.text.isEmpty) return false;
+    if( userName.text.isEmpty
+        ? userData.username.value.isEmpty
+        : userName.text.isEmpty) return false;
+    return true;
   }
 }

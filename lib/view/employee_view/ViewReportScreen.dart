@@ -32,28 +32,39 @@ class _ViewReportScreenState extends State<ViewReportScreen> {
       "employeeName": employee.employeeName.value,
       "date": DateFormat('dd:MM:yy').format(DateTime.now())
     }, userData.id.value).then((value) async {
+
+      List<String>product=[];
+      List<String>credit=[];
+      List<String>debit=[];
+      List<String>ramming=[];
       controller.controller.forEach((element) async {
-        await altogic.db.model("users.Reports.report").append({
-          "product": element.product,
-          "credit": element.credit,
-          "debit": element.debit,
-          "differ": element.ramming,
-        }, value.data['_id']);
+        product.add(element.product!);
+        credit.add(element.credit!);
+        debit.add(element.debit!);
+        ramming.add(element.ramming!);
       });
-      setLoading(false);
-      AwesomeDialog(
-        context: context,
-        dialogType: DialogType.info,
-        animType: AnimType.rightSlide,
-        title: 'Congratulation',
-        desc: 'Your Report successfully save',
-        btnOkColor: appMainColor,
-        btnOkOnPress: () {
-          Navigator.of(context)
-            ..pop()..pop();
-        },
-      )
-        ..show();
+      await altogic.db.model("users.Reports.report").append({
+        "myproduct": product,
+        "mycredit": credit,
+        "mydebit": debit,
+        "mydiffer": ramming,
+      }, value.data['_id']).then((value) {
+        setLoading(false);
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.info,
+          animType: AnimType.rightSlide,
+          title: 'Congratulation',
+          desc: 'Your Report successfully save',
+          btnOkColor: appMainColor,
+          btnOkOnPress: () {
+            Navigator.of(context)
+              ..pop()..pop();
+          },
+        )
+          ..show();
+      });
+
     });
   }
 
@@ -125,10 +136,10 @@ class _ViewReportScreenState extends State<ViewReportScreen> {
                         label: Text('Product'),
                       ),
                       DataColumn(
-                        label: Text('Credit'),
+                        label: Text('Debit'),
                       ),
                       DataColumn(
-                        label: Text('Debit'),
+                        label: Text('Credit'),
                       ),
                       DataColumn(
                         label: Text('Differ'),
