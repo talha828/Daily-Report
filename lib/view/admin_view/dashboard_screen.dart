@@ -33,9 +33,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<ShopModel> shops = [];
   getReports() async {
+    shopReport.list.clear();
     setLoading(true);
     shops.clear();
-    List<MyReportModel> list = [];
+
+    List<List<MyReportModel>> list2 = [];
     var data = await altogic.db
         .model('users.shop')
         .filter('username == "${userData.username.value}"')
@@ -51,24 +53,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 address: i['address'],
                 id: i['_id']));
           }
-          shops.forEach((element) async {
+
+          for(int i=0;i<shops.length;i++){
             var data = await altogic.db
                 .model('users.Reports')
-                .filter('shopName == "${element.shopName}"')
+                .filter('shopName == "${shops[i].shopName}"')
                 .get()
                 .then((value) {
+              // list.clear();
               if (value.errors == null) {
                 print(value.data.toString());
-                value.data!.forEach((element) {
-                  list.add(MyReportModel.fromJson(element));
-                });
-                shopReport.list.clear();
+                List<MyReportModel> list = [];
+                for(var i in value.data){
+                  list.add(MyReportModel.fromJson(i));
+                }
+                list2.add(list);
+                print(list.length);
                 shopReport.list.add(
-                    ShopAndItemsModel(shopName: element.shopName, list: list));
+                    ShopAndItemsModel(shopName: shops[i].shopName, list: list));
+
+                // list.clear();
                 setLoading(false);
               }
             });
-          });
+          }
+
         }else{
           setLoading(false);
         }
@@ -163,73 +172,77 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: Stack(
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(
-                vertical: width * 0.04, horizontal: width * 0.04),
-            child: Column(
-              children: [
-                shopReport.list != null
-                    ? ListView.separated(
-                        shrinkWrap: true,
-                        itemBuilder: (context, i) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                shopReport.list[i].shopName!,
-                                style: TextStyle(
-                                    fontSize: width * 0.08,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: width * 0.04,
-                              ),
-                              ListView.separated(
-                                separatorBuilder: (context, index) {
-                                  return SizedBox(
-                                    height: width * 0.04,
-                                  );
-                                },
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: width * 0.04),
-                                    decoration: BoxDecoration(
-                                        border: Border.all(color: appMainColor),
-                                        borderRadius: BorderRadius.circular(7)),
-                                    child: ListTile(
-                                      onTap: () {
-                                        item.items.value =
-                                            shopReport.list[i].list![index];
-                                        Get.to(ShowReportScreen());
-                                      },
-                                      leading: Image.asset(
-                                        Assets.iconDocument,
-                                        width: width * 0.08,
-                                        height: width * 0.08,
+          SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                  vertical: width * 0.04, horizontal: width * 0.04),
+              child: Column(
+                children: [
+                  shopReport.list != null
+                      ? ListView.separated(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, i) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(
+                                  shopReport.list[i].shopName!,
+                                  style: TextStyle(
+                                      fontSize: width * 0.08,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: width * 0.04,
+                                ),
+                                ListView.separated(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  separatorBuilder: (context, index) {
+                                    return SizedBox(
+                                      height: width * 0.04,
+                                    );
+                                  },
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: width * 0.04),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(color: appMainColor),
+                                          borderRadius: BorderRadius.circular(7)),
+                                      child: ListTile(
+                                        onTap: () {
+                                          item.items.value =
+                                              shopReport.list[i].list![index];
+                                          Get.to(ShowReportScreen());
+                                        },
+                                        leading: Image.asset(
+                                          Assets.iconDocument,
+                                          width: width * 0.08,
+                                          height: width * 0.08,
+                                        ),
+                                        title: Text(shopReport
+                                            .list[i].list![index].date!
+                                            .replaceAll(":", "-")),
+                                        subtitle: Text(shopReport
+                                            .list[i].list![index].employeeName!),
+                                        trailing: Icon(
+                                            Icons.arrow_forward_ios_outlined),
                                       ),
-                                      title: Text(shopReport
-                                          .list[i].list![index].date!
-                                          .replaceAll(":", "-")),
-                                      subtitle: Text(shopReport
-                                          .list[i].list![index].employeeName!),
-                                      trailing: Icon(
-                                          Icons.arrow_forward_ios_outlined),
-                                    ),
-                                  );
-                                },
-                                itemCount: shopReport.list[i].list!.length,
-                                shrinkWrap: true,
-                              )
-                            ],
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return SizedBox(height: width * 0.04);
-                        },
-                        itemCount: shopReport.list.length)
-                    : Container()
-              ],
+                                    );
+                                  },
+                                  itemCount: shopReport.list[i].list!.length,
+                                  shrinkWrap: true,
+                                )
+                              ],
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return SizedBox(height: width * 0.04);
+                          },
+                          itemCount: shopReport.list.length)
+                      : Container()
+                ],
+              ),
             ),
           ),
           isLoading ? LoadingIndicator() : Container()
