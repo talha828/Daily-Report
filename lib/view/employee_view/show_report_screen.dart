@@ -22,8 +22,6 @@ class _ShowReportScreenState extends State<ShowReportScreen> {
   final controller = Get.find<ItemController>();
   @override
   Widget build(BuildContext context) {
-    // controller.items.value.items!
-    //     .sort((a, b) => a.credit!.compareTo(b.credit!));
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(

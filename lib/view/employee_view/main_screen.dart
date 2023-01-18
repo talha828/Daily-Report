@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:altogic/altogic.dart';
 import 'package:daily_report/getx_controller/user_model.dart';
 import 'package:daily_report/model/my_reports_model.dart';
+import 'package:daily_report/view/employee_view/salesman_screen.dart';
+import 'package:daily_report/view/employee_view/salesmanlist_screen.dart';
 import 'package:daily_report/view/employee_view/show_report_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -69,6 +71,13 @@ class _MainScreenState extends State<MainScreen> {
         elevation: 0,
         actions: [
           InkWell(
+            onTap: ()=>Get.to(SalesmanListScreen()),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.person),
+            ),
+          ),
+          InkWell(
             onTap: getData,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -110,6 +119,14 @@ class _MainScreenState extends State<MainScreen> {
               title: const Text(' Home '),
               onTap: () {
                 Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Image.asset(Assets.imgEstateAgent,
+                  width: width * 0.07, height: width * 0.07),
+              title: const Text(' Salesman '),
+              onTap: () {
+                Get.to(const SalesmanScreen());
               },
             ),
             ListTile(
