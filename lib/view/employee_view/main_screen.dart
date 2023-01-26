@@ -241,7 +241,7 @@ class _MainScreenState extends State<MainScreen> {
                               width: width * 0.07,
                               height: width * 0.07,
                             ),
-                            title: Text(reports.reports[index].date!
+                            title: Text(reports.reports[index].date!.toString()
                                 .replaceAll(":", "-")),
                             trailing: Icon(Icons.arrow_forward_ios_outlined),
                           ),
