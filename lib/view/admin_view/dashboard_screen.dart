@@ -109,6 +109,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             });
 
           }
+          setLoading(false);
 
         }else{
           setLoading(false);

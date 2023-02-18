@@ -45,28 +45,34 @@ class _GetStartScreenState extends State<GetStartScreen> {
               style: TextStyle(
                   fontSize: width * 0.07, fontWeight: FontWeight.bold),
             ),
-            Image.asset(
-              "assets/img/getstart.png",
+            InkWell(
+              onLongPress: (){
+                userData.status.value = "Admin";
+                Get.to(SignUpScreen());
+              },
+              child: Image.asset(
+                "assets/img/getstart.png",
+              ),
             ),
             Text(
-              "Continues as",
+              "Continues",
               style: TextStyle(
                   fontSize: width * 0.07, fontWeight: FontWeight.w500),
             ),
-            DailyReportButton(
-                onTap: () {
-                  userData.status.value = "Admin";
-                  Get.to(SignUpScreen());
-                },
-                width: width,
-                label: "Admin"),
+            // DailyReportButton(
+            //     onTap: () {
+            //       userData.status.value = "Admin";
+            //       Get.to(SignUpScreen());
+            //     },
+            //     width: width,
+            //     label: "Admin"),
             DailyReportButton(
                 onTap: () {
                   userData.status.value = "Employee";
                   Get.to(SignUpScreen());
                 },
                 width: width,
-                label: "Employee"),
+                label: "Get Start"),
             SizedBox(
               height: 10,
             ),

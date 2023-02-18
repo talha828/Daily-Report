@@ -20,7 +20,7 @@ class _AdminSalesmanListScreenState extends State<AdminSalesmanListScreen> {
   getData() async {
     altogic.db
         .model("users.salesman")
-        .filter('employee_name == "${widget.employeeName}"')
+        .filter(' employee_name == "${widget.employeeName}"')
         .get()
         .then(
           (value) {

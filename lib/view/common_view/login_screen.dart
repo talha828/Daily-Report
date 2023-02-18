@@ -53,11 +53,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   DailyReportTextField(
                       controller: phoneNumber, hintText: "Phone No"),
                   DailyReportTextField(controller: password, hintText: "password"),
-                  Text(
-                    "Forget Password??",
-                    textAlign: TextAlign.end,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, color: appMainColor),
+                  InkWell(
+                    onTap: ()async{
+
+                    },
+                    child: Text(
+                      "Forget Password??",
+                      textAlign: TextAlign.end,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, color: appMainColor),
+                    ),
                   ),
                   ElevatedButton(
                       onPressed: () async {

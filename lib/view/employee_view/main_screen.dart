@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:altogic/altogic.dart';
 import 'package:daily_report/getx_controller/user_model.dart';
 import 'package:daily_report/model/my_reports_model.dart';
+import 'package:daily_report/view/admin_view/salesmanListScreen.dart';
 import 'package:daily_report/view/employee_view/salesman_screen.dart';
 import 'package:daily_report/view/employee_view/salesmanlist_screen.dart';
 import 'package:daily_report/view/employee_view/show_report_screen.dart';
@@ -66,86 +67,87 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        actions: [
-          InkWell(
-            onTap: ()=>Get.to(SalesmanListScreen()),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.person),
-            ),
-          ),
-          InkWell(
-            onTap: getData,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.refresh),
-            ),
-          ),
-        ],
-        //title: Text("Daily Report"),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: Text(
-                userData!.name.value.toUpperCase(),
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: width * 0.06),
-              ),
-              accountEmail: Text(
-                userData!.phoneNumber.value,
-                style: TextStyle(color: Colors.white),
-              ),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Text(
-                  userData!.name.value.toUpperCase().substring(0, 1),
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: width * 0.09,
-                      color: appMainColor),
-                ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          actions: [
+            InkWell(
+              onTap: () => Get.to(NewReportScreen()),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.add),
               ),
             ),
-            ListTile(
-              leading: Image.asset(Assets.iconHouse,
-                  width: width * 0.07, height: width * 0.07),
-              title: const Text(' Home '),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Image.asset(Assets.imgEstateAgent,
-                  width: width * 0.07, height: width * 0.07),
-              title: const Text(' Salesman '),
-              onTap: () {
-                Get.to(const SalesmanScreen());
-              },
-            ),
-            ListTile(
-              leading: Image.asset(Assets.iconLogout,
-                  width: width * 0.07, height: width * 0.07),
-              title: const Text('LogOut'),
-              onTap: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.setString("phone", "");
-                prefs.setString("password", "");
-                final errors = await altogic.auth.signOutAll();
-                Get.to(SplashScreen());
-              },
+            InkWell(
+              onTap: getData,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.refresh),
+              ),
             ),
           ],
+          //title: Text("Daily Report"),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              UserAccountsDrawerHeader(
+                accountName: Text(
+                  userData!.name.value.toUpperCase(),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: width * 0.06),
+                ),
+                accountEmail: Text(
+                  userData!.phoneNumber.value,
+                  style: TextStyle(color: Colors.white),
+                ),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Text(
+                    userData!.name.value.toUpperCase().substring(0, 1),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: width * 0.09,
+                        color: appMainColor),
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: Image.asset(Assets.iconHouse,
+                    width: width * 0.07, height: width * 0.07),
+                title: const Text(' Home '),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Image.asset(Assets.imgEstateAgent,
+                    width: width * 0.07, height: width * 0.07),
+                title: const Text(' Salesman '),
+                onTap: () {
+                  Get.to(const SalesmanScreen());
+                },
+              ),
+              ListTile(
+                leading: Image.asset(Assets.iconLogout,
+                    width: width * 0.07, height: width * 0.07),
+                title: const Text('LogOut'),
+                onTap: () async {
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.setString("phone", "");
+                  prefs.setString("password", "");
+                  final errors = await altogic.auth.signOutAll();
+                  Get.to(SplashScreen());
+                },
+              ),
+            ],
+          ),
+        ),
+        body: Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -189,71 +191,163 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               SizedBox(
-                height: width * 0.04,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7),
-                          border: Border.all(
-                              width: 2, color: Colors.grey.withOpacity(0.5))),
-                      child: ListTile(
-                        onTap: () => Get.to(NewReportScreen()),
-                        leading: Icon(
-                          Icons.add,
-                          color: Colors.grey.withOpacity(0.5),
-                        ),
-                        title: Text(
-                          "New Report",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios_outlined,
-                          color: Colors.grey.withOpacity(0.5),
+                height: 50,
+                child: AppBar(
+                  bottom: TabBar(
+                    indicatorColor: Colors.white,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicatorWeight: 4,
+
+                    tabs: [
+                      Tab(
+                        // text: "Reports",
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Image.asset(
+                              Assets.iconDocument,
+                              width: width * 0.05,
+                              height: width * 0.05,
+                            ),
+                            // SizedBox(),
+                            Text(
+                              "Report",
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: width * 0.04),
+                            )
+                          ],
                         ),
                       ),
-                    ),
-                  ],
+                      Tab(
+                        // icon: Image.asset(Assets.imgEstateAgent,width:width * 0.02,height: width * 0.02,),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Image.asset(
+                              Assets.imgEstateAgent,
+                              width: width * 0.05,
+                              height: width * 0.05,
+                            ),
+                            Text(
+                              "Salesman",
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: width * 0.04),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(
-                height: width * 0.04,
-              ),
-              reports.reports != null
-                  ? ListView.separated(
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: EdgeInsets.symmetric(horizontal: width * 0.04),
-                          decoration: BoxDecoration(
-                              border: Border.all(color: appMainColor),
-                              borderRadius: BorderRadius.circular(7)),
-                          child: ListTile(
-                            onTap: () {
-                              item.items.value = reports.reports[index];
-                              Get.to(ShowReportScreen());
-                            },
-                            leading: Image.asset(
-                              Assets.iconDocument,
-                              width: width * 0.07,
-                              height: width * 0.07,
-                            ),
-                            title: Text(reports.reports[index].date!.toString()
-                                .replaceAll(":", "-")),
-                            trailing: Icon(Icons.arrow_forward_ios_outlined),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: width * 0.04,
-                        );
-                      },
-                      itemCount: reports.reports.length)
-                  : Container(),
+             Expanded(
+               child: TabBarView(children: [
+                 Column(children: [
+                   SizedBox(
+                     height: width * 0.04,
+                   ),
+                   // Container(
+                   //   padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+                   //   child: Column(
+                   //     children: [
+                   //       Container(
+                   //         decoration: BoxDecoration(
+                   //             borderRadius: BorderRadius.circular(7),
+                   //             border: Border.all(
+                   //                 width: 2, color: Colors.grey.withOpacity(0.5))),
+                   //         child: ListTile(
+                   //          onTap: () => Get.to(NewReportScreen()),
+                   //           leading: Icon(
+                   //             Icons.add,
+                   //             color: Colors.grey.withOpacity(0.5),
+                   //           ),
+                   //           title: Text(
+                   //             "New Report",
+                   //             style: TextStyle(color: Colors.grey),
+                   //           ),
+                   //           trailing: Icon(
+                   //             Icons.arrow_forward_ios_outlined,
+                   //             color: Colors.grey.withOpacity(0.5),
+                   //           ),
+                   //         ),
+                   //       ),
+                   //     ],
+                   //   ),
+                   // ),
+                   // SizedBox(
+                   //   height: width * 0.04,
+                   // ),
+                   reports.reports != null
+                       ? ListView.separated(
+                       shrinkWrap: true,
+                       itemBuilder: (context, index) {
+                         return Container(
+                           margin: EdgeInsets.symmetric(horizontal: width * 0.04),
+                           decoration: BoxDecoration(
+                               border: Border.all(color:Colors.grey.withOpacity(0.5)),
+                               borderRadius: BorderRadius.circular(7)
+                           ),
+                           child: ListTile(
+                             //onTap: ()=>Get.to(ShopReportScreen(employee:  mylist[i])),
+                             title: Text(
+                               reports.reports[index].date!,
+                               maxLines: 1,
+                               style: TextStyle(
+                                   fontSize: width * 0.05,
+                                   fontWeight: FontWeight.bold),
+                             ),
+                             leading: Image.asset(
+                               Assets.iconDocument,
+                               width: width * 0.1,
+                               height: width * 0.1,
+                             ),
+                             subtitle: Padding(
+                               padding: const EdgeInsets.only(top: 8),
+                               child: Row(
+                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                 children: [
+                                   Text(double.parse(reports.reports[index].items![0].credit!.last).toStringAsFixed(0),style: TextStyle(color: Colors.red),),
+                                   Text(double.parse(reports.reports[index].items![0].debit!.last).toStringAsFixed(0),style: TextStyle(color: Colors.blue),),
+                                   Text(double.parse(reports.reports[index].items![0].differ!.last).toStringAsFixed(0),style: TextStyle(color: Colors.green),),
+                                 ],
+                               ),
+                             ),
+                             trailing: Icon(Icons.arrow_forward_ios_outlined),
+                           ),
+                         );
+                         //   Container(
+                         //   margin: EdgeInsets.symmetric(horizontal: width * 0.04),
+                         //   decoration: BoxDecoration(
+                         //       border: Border.all(color: appMainColor),
+                         //       borderRadius: BorderRadius.circular(7)),
+                         //   child: ListTile(
+                         //     onTap: () {
+                         //       item.items.value = reports.reports[index];
+                         //       Get.to(ShowReportScreen());
+                         //     },
+                         //     leading: Image.asset(
+                         //       Assets.iconDocument,
+                         //       width: width * 0.07,
+                         //       height: width * 0.07,
+                         //     ),
+                         //     title: Text(reports.reports[index].date!.toString()
+                         //         .replaceAll(":", "-")),
+                         //     trailing: Icon(Icons.arrow_forward_ios_outlined),
+                         //   ),
+                         // );
+                       },
+                       separatorBuilder: (context, index) {
+                         return SizedBox(
+                           height: width * 0.04,
+                         );
+                       },
+                       itemCount: reports.reports.length)
+                       : Container(),
+                 ],),
+                 // AdminSalesmanListScreen(employeeName: userData.name.value),
+                 AdminSalesmanListScreen(employeeName: userData.name.value),
+               ]),
+             ),
             ],
           ),
         ),

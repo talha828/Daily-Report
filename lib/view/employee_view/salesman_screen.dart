@@ -21,6 +21,11 @@ class SalesmanScreen extends StatefulWidget {
 }
 
 class _SalesmanScreenState extends State<SalesmanScreen> {
+
+  double creditValue=0;
+  double debitValue=0;
+  // double dd=creditValue -debitValue;
+
   TextEditingController date = TextEditingController();
   TextEditingController debit = TextEditingController();
   TextEditingController credit = TextEditingController();
@@ -162,7 +167,24 @@ class _SalesmanScreenState extends State<SalesmanScreen> {
                     style: TextStyle(
                         fontSize: width * 0.06, fontWeight: FontWeight.bold),
                   ),
-                  DailyReportTextField(controller: debit, hintText: "Ex. 5000"),
+                  //DailyReportTextField(controller: debit, hintText: "Ex. 5000"),
+      TextField(
+        keyboardType: TextInputType.number,
+        controller: debit,
+        onChanged: (value){
+          setState(() {
+            debitValue=double.parse(value);
+          });
+        },
+        decoration: InputDecoration(
+            focusedBorder: UnderlineInputBorder(
+                borderSide: new BorderSide(color: appMainColor)),
+            disabledBorder: UnderlineInputBorder(
+                borderSide: new BorderSide(color: appMainColor)),
+            border: UnderlineInputBorder(
+                borderSide: new BorderSide(color: appMainColor)),
+            hintText: "Ex. 5000"),
+      ),
                   SizedBox(
                     height: width * 0.04,
                   ),
@@ -172,8 +194,25 @@ class _SalesmanScreenState extends State<SalesmanScreen> {
                     style: TextStyle(
                         fontSize: width * 0.06, fontWeight: FontWeight.bold),
                   ),
-                  DailyReportTextField(
-                      controller: credit, hintText: "Ex. 3000"),
+                  TextField(
+                    keyboardType: TextInputType.number,
+                    controller: credit,
+                    onChanged: (value){
+                      setState(() {
+                        creditValue=double.parse(value);
+                      });
+                    },
+                    decoration: InputDecoration(
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: new BorderSide(color: appMainColor)),
+                        disabledBorder: UnderlineInputBorder(
+                            borderSide: new BorderSide(color: appMainColor)),
+                        border: UnderlineInputBorder(
+                            borderSide: new BorderSide(color: appMainColor)),
+                        hintText: "Ex. 3000"),
+                  ),
+                  // DailyReportTextField(
+                  //     controller: credit, hintText: "Ex. 3000"),
                   SizedBox(
                     height: width * 0.04,
                   ),
@@ -184,7 +223,8 @@ class _SalesmanScreenState extends State<SalesmanScreen> {
                         fontSize: width * 0.06, fontWeight: FontWeight.bold),
                   ),
                   DailyReportTextField(
-                      controller: remaining, hintText: "Ex. 2000"),
+                    enable: false,
+                      controller: TextEditingController(text: (debitValue - creditValue).toString()), hintText: "Ex. 2000"),
                   SizedBox(
                     height: width * 0.08,
                   ),
@@ -197,13 +237,13 @@ class _SalesmanScreenState extends State<SalesmanScreen> {
                         if (dropdownvalue.salesmanName != "Select Salesman") {
                           if (debit.text.isNotEmpty) {
                             if (credit.text.isNotEmpty) {
-                              if (remaining.text.isNotEmpty) {
+                              // if (remaining.text.isNotEmpty) {
                                 altogic.db.model("users.salesman.report").append({
                                   "timestamp":
                                       DateTime.now().millisecondsSinceEpoch,
                                   "credit": credit.text,
                                   "debit": debit.text,
-                                  "remaining": remaining.text,
+                                  "remaining": (debitValue - creditValue).toString(),
                                   "date": DateFormat('dd-MM-yyyy')
                                       .format(
                                         DateTime.now(),
@@ -230,10 +270,10 @@ class _SalesmanScreenState extends State<SalesmanScreen> {
                                     }
                                   },
                                 );
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: "Your remaining is empty");
-                              }
+                              // } else {
+                              //   Fluttertoast.showToast(
+                              //       msg: "Your remaining is empty");
+                              // }
                             } else {
                               Fluttertoast.showToast(
                                   msg: "Your credit is empty");
