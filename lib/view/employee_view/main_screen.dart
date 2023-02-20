@@ -18,7 +18,9 @@ import '../../getx_controller/items_controller.dart';
 import '../../getx_controller/save_reports_controller.dart';
 import '../../main.dart';
 import '../../model/emploeey_shop_details_model.dart';
+import '../../model/month.dart';
 import '../common_view/splash_screen.dart';
+import 'month_wise_report_screen.dart';
 import 'new_report-screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -34,7 +36,8 @@ class _MainScreenState extends State<MainScreen> {
   final reports = Get.put(MyReportController());
   final item = Get.put(ItemController());
   late String _timeString;
-
+  List<MonthName> month=[];
+ List<String> monthsname=["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November" , "December"];
   getData() async {
     List<MyReportModel> list = [];
     print(employee.id);
@@ -48,8 +51,26 @@ class _MainScreenState extends State<MainScreen> {
         value.data!.forEach((element) {
           list.add(MyReportModel.fromJson(element));
         });
+
         reports.reports.clear();
         reports.reports.addAll(list);
+        for(int i = 0; i < 12; i++){
+          List<MyReportModel> temp=[];
+          double credit =0.0;
+          double debit =0.0;
+          double differ =0.0;
+          for (int j=0;j<reports.reports.length;j++) {
+            print(reports.reports[i].date!);
+            print(reports.reports[i].date!.substring(3,5));
+            if("0"+(i+1).toString() == reports.reports[j].date!.substring(3,5)){
+              temp.add(reports.reports[j]);
+              debit=debit+ double.parse(reports.reports[j].items![0].debit!.last) ?? 0;
+              credit=credit+double.parse(reports.reports[j].items![0].credit!.last) ?? 0;
+              differ=differ+double.parse(reports.reports[j].items![0].differ!.last) ?? 0;
+            }
+          }
+          month.add(MonthName(name: monthsname[i],reports:temp,credit: credit,differ: differ,debit: debit ));
+        }
         setState(() {});
       }
     });
@@ -124,14 +145,14 @@ class _MainScreenState extends State<MainScreen> {
                   Navigator.pop(context);
                 },
               ),
-              ListTile(
-                leading: Image.asset(Assets.imgEstateAgent,
-                    width: width * 0.07, height: width * 0.07),
-                title: const Text(' Salesman '),
-                onTap: () {
-                  Get.to(const SalesmanScreen());
-                },
-              ),
+              // ListTile(
+              //   leading: Image.asset(Assets.imgEstateAgent,
+              //       width: width * 0.07, height: width * 0.07),
+              //   title: const Text(' Salesman '),
+              //   onTap: () {
+              //     Get.to(const SalesmanScreen());
+              //   },
+              // ),
               ListTile(
                 leading: Image.asset(Assets.iconLogout,
                     width: width * 0.07, height: width * 0.07),
@@ -277,42 +298,45 @@ class _MainScreenState extends State<MainScreen> {
                    // SizedBox(
                    //   height: width * 0.04,
                    // ),
-                   reports.reports != null
+                   month.isNotEmpty
                        ? ListView.separated(
                        shrinkWrap: true,
                        itemBuilder: (context, index) {
-                         return Container(
-                           margin: EdgeInsets.symmetric(horizontal: width * 0.04),
-                           decoration: BoxDecoration(
-                               border: Border.all(color:Colors.grey.withOpacity(0.5)),
-                               borderRadius: BorderRadius.circular(7)
-                           ),
-                           child: ListTile(
-                             //onTap: ()=>Get.to(ShopReportScreen(employee:  mylist[i])),
-                             title: Text(
-                               reports.reports[index].date!,
-                               maxLines: 1,
-                               style: TextStyle(
-                                   fontSize: width * 0.05,
-                                   fontWeight: FontWeight.bold),
+                         return Visibility(
+                           visible: month[index].reports.length<1?false:true,
+                           child: Container(
+                             margin: EdgeInsets.symmetric(horizontal: width * 0.04),
+                             decoration: BoxDecoration(
+                                 border: Border.all(color:Colors.grey.withOpacity(0.5)),
+                                 borderRadius: BorderRadius.circular(7)
                              ),
-                             leading: Image.asset(
-                               Assets.iconDocument,
-                               width: width * 0.1,
-                               height: width * 0.1,
-                             ),
-                             subtitle: Padding(
-                               padding: const EdgeInsets.only(top: 8),
-                               child: Row(
-                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                 children: [
-                                   Text(double.parse(reports.reports[index].items![0].credit!.last).toStringAsFixed(0),style: TextStyle(color: Colors.red),),
-                                   Text(double.parse(reports.reports[index].items![0].debit!.last).toStringAsFixed(0),style: TextStyle(color: Colors.blue),),
-                                   Text(double.parse(reports.reports[index].items![0].differ!.last).toStringAsFixed(0),style: TextStyle(color: Colors.green),),
-                                 ],
+                             child: ListTile(
+                               onTap: ()=>Get.to(MonthWiseReportScreen(data:month[index],)),
+                               title: Text(
+                                 month[index].name,
+                                 maxLines: 1,
+                                 style: TextStyle(
+                                     fontSize: width * 0.05,
+                                     fontWeight: FontWeight.bold),
                                ),
+                               leading: Image.asset(
+                                 Assets.iconDocument,
+                                 width: width * 0.1,
+                                 height: width * 0.1,
+                               ),
+                               subtitle: Padding(
+                                 padding: const EdgeInsets.only(top: 8),
+                                 child: Row(
+                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                   children: [
+                                     Text(double.parse( month[index].credit.toString()).toStringAsFixed(0),style: TextStyle(color: Colors.red),),
+                                     Text(double.parse( month[index].debit.toString()).toStringAsFixed(0),style: TextStyle(color: Colors.blue),),
+                                     Text(double.parse( month[index].differ.toString()).toStringAsFixed(0),style: TextStyle(color: Colors.green),),
+                                   ],
+                                 ),
+                               ),
+                               trailing: Icon(Icons.arrow_forward_ios_outlined),
                              ),
-                             trailing: Icon(Icons.arrow_forward_ios_outlined),
                            ),
                          );
                          //   Container(
@@ -341,7 +365,7 @@ class _MainScreenState extends State<MainScreen> {
                            height: width * 0.04,
                          );
                        },
-                       itemCount: reports.reports.length)
+                       itemCount: month.length)
                        : Container(),
                  ],),
                  // AdminSalesmanListScreen(employeeName: userData.name.value),

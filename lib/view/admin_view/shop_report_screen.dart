@@ -9,8 +9,10 @@ import '../../generated/assets.dart';
 import '../../getx_controller/items_controller.dart';
 import '../../getx_controller/shop_report_controller.dart';
 import '../../main.dart';
+import '../../model/month.dart';
 import '../../model/shop_and_items_model.dart';
 import '../../model/shop_model.dart';
+import '../employee_view/month_wise_report_screen.dart';
 import '../employee_view/show_report_screen.dart';
 
 class ShopReportScreen extends StatefulWidget {
@@ -24,6 +26,8 @@ class ShopReportScreen extends StatefulWidget {
 class _ShopReportScreenState extends State<ShopReportScreen> {
   final shopReport = Get.put(ShopReportController());
   final item = Get.put(ItemController());
+  List<MonthName> month=[];
+  List<String> monthsname=["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November" , "December"];
 
   List<ShopModel> shops = [];
   getData() async {
@@ -39,9 +43,27 @@ class _ShopReportScreenState extends State<ShopReportScreen> {
         for (var i in value.data) {
           list.add(MyReportModel.fromJson(i));
         }
+
         shopReport.list
             .add(ShopAndItemsModel(shopName: widget.employee.shopName, list: list));
         setState(() {});
+      }
+      for(int i = 0; i < 12; i++){
+        List<MyReportModel> temp=[];
+        double credit =0.0;
+        double debit =0.0;
+        double differ =0.0;
+        for (int j=0;j<shopReport.list[0].list!.length;j++) {
+          print(shopReport.list[0].list![i].date!);
+          print(shopReport.list[0].list![i].date!.substring(3,5));
+          if("0"+(i+1).toString() == shopReport.list[0].list![j].date!.substring(3,5)){
+            temp.add(shopReport.list[0].list![j]);
+            debit=debit+ double.parse(shopReport.list[0].list![j].items![0].debit!.last) ?? 0;
+            credit=credit+double.parse(shopReport.list[0].list![j].items![0].credit!.last) ?? 0;
+            differ=differ+double.parse(shopReport.list[0].list![j].items![0].differ!.last) ?? 0;
+          }
+        }
+        month.add(MonthName(name: monthsname[i],reports:temp,credit: credit,differ: differ,debit: debit ));
       }
     });
   }
@@ -111,40 +133,42 @@ class _ShopReportScreenState extends State<ShopReportScreen> {
                     vertical: width * 0.04, horizontal: width * 0.04),
                 child: ListView.separated(
                     itemBuilder: (context, index) {
-                      return Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),
-                            border: Border.all(
-                                color: Colors.grey.withOpacity(0.5))),
-                        child: ListTile(
-                            onTap: () {
-                              item.items.value =
-                                  shopReport.list[index].list![index];
-                              Get.to(ShowReportScreen());
-                            },
+                      return  Visibility(
+                        visible: month[index].reports.length<1?false:true,
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: width * 0.04),
+                          decoration: BoxDecoration(
+                              border: Border.all(color:Colors.grey.withOpacity(0.5)),
+                              borderRadius: BorderRadius.circular(7)
+                          ),
+                          child: ListTile(
+                            onTap: ()=>Get.to(MonthWiseReportScreen(data:month[index],)),
+                            title: Text(
+                              month[index].name,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontSize: width * 0.05,
+                                  fontWeight: FontWeight.bold),
+                            ),
                             leading: Image.asset(
                               Assets.iconDocument,
-                              width: width * 0.08,
-                              height: width * 0.08,
+                              width: width * 0.1,
+                              height: width * 0.1,
                             ),
-                            title: Text(shopReport.list.first.list![index].date!.toString()
-                                .replaceAll(":", "-")),
-                            subtitle: Text(shopReport
-                                .list.first.list![index].employeeName!),
-                            trailing: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  "- ${shopReport.list.first.list![index].items!.last.credit!.last}",
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                                Text(
-                                  "+ ${shopReport.list.first.list![index].items!.last.debit!.last}",
-                                  style: TextStyle(color: Colors.green),
-                                ),
-                                // Text(shopReport.list.first.list![index].items!.last.differ!.last),
-                              ],
-                            )),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(double.parse( month[index].credit.toString()).toStringAsFixed(0),style: TextStyle(color: Colors.red),),
+                                  Text(double.parse( month[index].debit.toString()).toStringAsFixed(0),style: TextStyle(color: Colors.blue),),
+                                  Text(double.parse( month[index].differ.toString()).toStringAsFixed(0),style: TextStyle(color: Colors.green),),
+                                ],
+                              ),
+                            ),
+                            trailing: Icon(Icons.arrow_forward_ios_outlined),
+                          ),
+                        ),
                       );
                     },
                     separatorBuilder: (context, index) {

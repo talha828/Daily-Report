@@ -1,7 +1,10 @@
+import 'package:daily_report/components/constant/contant.dart';
 import 'package:daily_report/main.dart';
 import 'package:daily_report/model/salesmanReportModel.dart';
+import 'package:daily_report/view/employee_view/salesman_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 class ViewSalesmanReportScreen extends StatefulWidget {
   final String id;
@@ -37,6 +40,21 @@ class _ViewSalesmanReportScreenState extends State<ViewSalesmanReportScreen> {
   Widget build(BuildContext context) {
     var width=MediaQuery.of(context).size.width;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: appMainColor,
+        child:Icon(Icons.add) ,onPressed: ()async{
+        if(list.isNotEmpty){
+            Get.to(SalesmanScreen(
+              salesman: widget.salesmanName,
+              remaining: list.last.remaining,
+            ));
+          }else{
+          Get.to(SalesmanScreen(
+            salesman: widget.salesmanName,
+            remaining:"0",
+          ));
+        }
+        },),
      appBar: AppBar(
        title: Text(widget.salesmanName),
      ),

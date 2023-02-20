@@ -1,3 +1,4 @@
+import 'package:daily_report/components/constant/contant.dart';
 import 'package:daily_report/main.dart';
 import 'package:daily_report/model/salesmanModel.dart';
 import 'package:daily_report/view/employee_view/view_salesman_report-screen.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../getx_controller/user_model.dart';
+import '../employee_view/add_salesman_screen.dart';
 
 class AdminSalesmanListScreen extends StatefulWidget {
   final String employeeName;
@@ -51,6 +53,11 @@ class _AdminSalesmanListScreenState extends State<AdminSalesmanListScreen> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: appMainColor,
+          onPressed: () => Get.to(CreateSalsemanScreen()),
+
+          label: Text("New Salesman")),
       body: Container(
           padding: EdgeInsets.symmetric(
               vertical: width * 0.04, horizontal: width * 0.04),

@@ -24,18 +24,22 @@ class DailyReportDropDown extends StatelessWidget {
           border: Border.all(color: Colors.grey.withOpacity(0.5)),
           borderRadius: BorderRadius.circular(7)),
       child: DropdownButtonHideUnderline(
-        child: DropdownButton<SalesmanModel>(
-          disabledHint: Text("Loading"),
-          isExpanded: true,
-          value: dropdownvalue,
-          icon: const Icon(Icons.keyboard_arrow_down),
-          items: items.map((SalesmanModel items) {
-            return DropdownMenuItem(
-              value: items,
-              child: Text(items.salesmanName),
-            );
-          }).toList(),
-          onChanged: ontap,
+        child: IgnorePointer(
+          ignoring: true,
+          child: DropdownButton<SalesmanModel>(
+
+            disabledHint: Text("Loading"),
+            isExpanded: true,
+            value: dropdownvalue,
+            icon: const Icon(Icons.keyboard_arrow_down),
+            items: items.map((SalesmanModel items) {
+              return DropdownMenuItem(
+                value: items,
+                child: Text(items.salesmanName),
+              );
+            }).toList(),
+            onChanged: ontap,
+          ),
         ),
       ),
     );

@@ -14,7 +14,9 @@ import '../../getx_controller/user_model.dart';
 import '../../model/salesmanModel.dart';
 
 class SalesmanScreen extends StatefulWidget {
-  const SalesmanScreen({Key? key}) : super(key: key);
+  final String remaining;
+  final String salesman;
+  const SalesmanScreen({required this.remaining,required this.salesman,Key? key}) : super(key: key);
 
   @override
   State<SalesmanScreen> createState() => _SalesmanScreenState();
@@ -75,6 +77,11 @@ class _SalesmanScreenState extends State<SalesmanScreen> {
               shopId: i['shopId'],
               about: i["about"],
               id: i["_id"]));
+          for(var i in salesman){
+            if(i.salesmanName == widget.salesman){
+              dropdownvalue=i;
+            }
+          }
           setState(() {});
         });
       } else {
@@ -224,7 +231,7 @@ class _SalesmanScreenState extends State<SalesmanScreen> {
                   ),
                   DailyReportTextField(
                     enable: false,
-                      controller: TextEditingController(text: (debitValue - creditValue).toString()), hintText: "Ex. 2000"),
+                      controller: TextEditingController(text: ( double.parse(widget.remaining)+ debitValue - creditValue).toString()), hintText: "Ex. 2000"),
                   SizedBox(
                     height: width * 0.08,
                   ),
@@ -243,7 +250,7 @@ class _SalesmanScreenState extends State<SalesmanScreen> {
                                       DateTime.now().millisecondsSinceEpoch,
                                   "credit": credit.text,
                                   "debit": debit.text,
-                                  "remaining": (debitValue - creditValue).toString(),
+                                  "remaining": (double.parse(widget.remaining)+ debitValue - creditValue).toString(),
                                   "date": DateFormat('dd-MM-yyyy')
                                       .format(
                                         DateTime.now(),
@@ -260,7 +267,9 @@ class _SalesmanScreenState extends State<SalesmanScreen> {
                                         desc: 'Your data successfully save',
                                         btnOkColor: appMainColor,
                                         btnOkOnPress: () {
-                                          Navigator.of(context)..pop();
+                                         var nav = Navigator.of(context);
+                                          nav.pop();
+                                          nav.pop();
                                         },
                                       )..show();
                                     } else {
